@@ -3,8 +3,8 @@
 class Database {
     private $host = '127.0.0.1';
     private $db_name = 'app_bac';
-    private $username = 'root';
-    private $password = '';
+    private $username = 'app_bac_user';
+    private $password = 'password';
     private $conn;
 
     public function connect() {

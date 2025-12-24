@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../app/controllers/AuthController.php';
 require_once __DIR__ . '/../app/controllers/UserController.php';
 require_once __DIR__ . '/../app/controllers/SettingController.php';
+require_once __DIR__ . '/../app/controllers/RoleController.php';
 
 $request_uri = strtok($_SERVER['REQUEST_URI'], '?');
 $segments = explode('/', trim($request_uri, '/'));
@@ -32,6 +33,17 @@ switch ($segments[0]) {
         break;
     case 'users':
         $controller = new UserController();
+        $method = $segments[1] ?? 'index';
+        $param = $segments[2] ?? null;
+        if (method_exists($controller, $method)) {
+            $controller->$method($param);
+        } else {
+            http_response_code(404);
+            echo "404 Not Found";
+        }
+        break;
+    case 'roles':
+        $controller = new RoleController();
         $method = $segments[1] ?? 'index';
         $param = $segments[2] ?? null;
         if (method_exists($controller, $method)) {

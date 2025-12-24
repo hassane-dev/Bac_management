@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../config/database.php';
 class Role {
     private $conn;
     private $table = 'roles';
+    private $pivot_table = 'roles_accreditations';
 
     public function __construct() {
         $database = new Database();
@@ -49,6 +50,7 @@ class Role {
     }
 
     public function delete($id) {
+        // Note: ON DELETE CASCADE will handle the pivot table
         $query = 'DELETE FROM ' . $this->table . ' WHERE id = :id';
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
@@ -59,11 +61,61 @@ class Role {
         return false;
     }
 
+    /**
+     * Get all permission IDs associated with a role
+     * @param int $role_id
+     * @return array An array of integer IDs
+     */
     public function getPermissions($role_id) {
-        $query = 'SELECT a.nom_permission FROM accreditations a JOIN roles_accreditations ra ON a.id = ra.id_accreditation WHERE ra.id_role = :role_id';
-        $stmt = $this.conn->prepare($query);
+        $query = 'SELECT id_accreditation FROM ' . $this->pivot_table . ' WHERE id_role = :role_id';
+        $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':role_id', $role_id);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        // Fetch as a flat array and cast all values to integers for consistency
+        $ids = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+        return array_map('intval', $ids);
+    }
+
+    /**
+     * Update the permissions for a specific role
+     * @param int $role_id
+     * @param array $permission_ids
+     * @return bool
+     */
+    public function updatePermissions($role_id, $permission_ids = []) {
+        // Start a transaction to ensure atomicity
+        $this->conn->beginTransaction();
+
+        try {
+            // 1. Delete all existing permissions for this role
+            $delete_query = 'DELETE FROM ' . $this->pivot_table . ' WHERE id_role = :role_id';
+            $stmt_delete = $this->conn->prepare($delete_query);
+            $stmt_delete->bindParam(':role_id', $role_id);
+            $stmt_delete->execute();
+
+            // 2. Insert the new permissions
+            if (!empty($permission_ids)) {
+                $insert_query = 'INSERT INTO ' . $this->pivot_table . ' (id_role, id_accreditation) VALUES (:role_id, :id_accreditation)';
+                $stmt_insert = $this->conn->prepare($insert_query);
+                $stmt_insert->bindParam(':role_id', $role_id);
+
+                foreach ($permission_ids as $permission_id) {
+                    // Use bindValue inside a loop, not bindParam
+                    $stmt_insert->bindValue(':id_accreditation', $permission_id);
+                    $stmt_insert->execute();
+                }
+            }
+
+            // If everything is fine, commit the transaction
+            $this->conn->commit();
+            return true;
+
+        } catch (Exception $e) {
+            // If something goes wrong, roll back the transaction
+            $this->conn->rollBack();
+            // Optionally log the error: error_log($e->getMessage());
+            return false;
+        }
     }
 }
