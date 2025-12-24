@@ -3,6 +3,9 @@ require_once __DIR__ . '/../app/controllers/AuthController.php';
 require_once __DIR__ . '/../app/controllers/UserController.php';
 require_once __DIR__ . '/../app/controllers/SettingController.php';
 require_once __DIR__ . '/../app/controllers/RoleController.php';
+require_once __DIR__ . '/../app/controllers/LyceeController.php';
+require_once __DIR__ . '/../app/controllers/SerieController.php';
+require_once __DIR__ . '/../app/controllers/MatiereController.php';
 
 $request_uri = strtok($_SERVER['REQUEST_URI'], '?');
 $segments = explode('/', trim($request_uri, '/'));
@@ -58,6 +61,39 @@ switch ($segments[0]) {
         $method = $segments[1] ?? 'index';
         if (method_exists($controller, $method)) {
             $controller->$method();
+        } else {
+            http_response_code(404);
+            echo "404 Not Found";
+        }
+        break;
+    case 'lycees':
+        $controller = new LyceeController();
+        $method = $segments[1] ?? 'index';
+        $param = $segments[2] ?? null;
+        if (method_exists($controller, $method)) {
+            $controller->$method($param);
+        } else {
+            http_response_code(404);
+            echo "404 Not Found";
+        }
+        break;
+    case 'series':
+        $controller = new SerieController();
+        $method = $segments[1] ?? 'index';
+        $param = $segments[2] ?? null;
+        if (method_exists($controller, $method)) {
+            $controller->$method($param);
+        } else {
+            http_response_code(404);
+            echo "404 Not Found";
+        }
+        break;
+    case 'matieres':
+        $controller = new MatiereController();
+        $method = $segments[1] ?? 'index';
+        $param = $segments[2] ?? null;
+        if (method_exists($controller, $method)) {
+            $controller->$method($param);
         } else {
             http_response_code(404);
             echo "404 Not Found";

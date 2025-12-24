@@ -6,3 +6,6 @@
 
 # Environment-specific files
 .env
+
+# PHPUnit cache
+.phpunit.cache/
