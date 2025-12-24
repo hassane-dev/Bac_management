@@ -15,6 +15,26 @@
                     </a>
                 </li>
                  <li class="pc-item pc-caption"><label>Management</label></li>
+                 <li class="pc-item">
+                    <a href="/lycees" class="pc-link">
+                        <span class="pc-micon"><i class="ti ti-building-community"></i></span>
+                        <span class="pc-mtext">Lycees</span>
+                    </a>
+                </li>
+                <li class="pc-item">
+                    <a href="/series" class="pc-link">
+                        <span class="pc-micon"><i class="ti ti-books"></i></span>
+                        <span class="pc-mtext">Series</span>
+                    </a>
+                </li>
+                <li class="pc-item">
+                    <a href="/matieres" class="pc-link">
+                        <span class="pc-micon"><i class="ti ti-book"></i></span>
+                        <span class="pc-mtext">Matieres</span>
+                    </a>
+                </li>
+
+                 <li class="pc-item pc-caption"><label>Administration</label></li>
                 <li class="pc-item">
                     <a href="/users" class="pc-link">
                         <span class="pc-micon"><i class="ti ti-users"></i></span>
@@ -27,9 +47,8 @@
                         <span class="pc-mtext">Roles</span>
                     </a>
                 </li>
-                 <li class="pc-item pc-caption"><label>Settings</label></li>
                  <li class="pc-item">
-                    <a href="/settings" class="pc-link">
+                    <a href="/setting" class="pc-link">
                         <span class="pc-micon"><i class="ti ti-settings"></i></span>
                         <span class="pc-mtext">General Settings</span>
                     </a>
