@@ -6,6 +6,7 @@ require_once __DIR__ . '/../app/controllers/RoleController.php';
 require_once __DIR__ . '/../app/controllers/LyceeController.php';
 require_once __DIR__ . '/../app/controllers/SerieController.php';
 require_once __DIR__ . '/../app/controllers/MatiereController.php';
+require_once __DIR__ . '/../app/controllers/CentreController.php';
 
 $request_uri = strtok($_SERVER['REQUEST_URI'], '?');
 $segments = explode('/', trim($request_uri, '/'));
@@ -90,6 +91,17 @@ switch ($segments[0]) {
         break;
     case 'matieres':
         $controller = new MatiereController();
+        $method = $segments[1] ?? 'index';
+        $param = $segments[2] ?? null;
+        if (method_exists($controller, $method)) {
+            $controller->$method($param);
+        } else {
+            http_response_code(404);
+            echo "404 Not Found";
+        }
+        break;
+    case 'centres':
+        $controller = new CentreController();
         $method = $segments[1] ?? 'index';
         $param = $segments[2] ?? null;
         if (method_exists($controller, $method)) {

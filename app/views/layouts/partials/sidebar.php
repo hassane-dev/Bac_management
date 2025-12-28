@@ -33,6 +33,12 @@
                         <span class="pc-mtext">Matieres</span>
                     </a>
                 </li>
+                <li class="pc-item">
+                    <a href="/centres" class="pc-link">
+                        <span class="pc-micon"><i class="ti ti-building"></i></span>
+                        <span class="pc-mtext">Centres</span>
+                    </a>
+                </li>
 
                  <li class="pc-item pc-caption"><label>Administration</label></li>
                 <li class="pc-item">
